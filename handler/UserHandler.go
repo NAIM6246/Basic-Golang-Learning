@@ -3,7 +3,6 @@ package handler
 import (
 	"Golang/handler/param"
 	"Golang/services"
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -14,9 +13,11 @@ import (
 type UserHandler struct {
 }
 
+/*
 type response struct {
 	Name string `json:"name"`
 }
+*/
 
 //NewUserHandler is the constructor of UserHandler struct
 func NewUserHandler() *UserHandler {
@@ -25,7 +26,8 @@ func NewUserHandler() *UserHandler {
 
 func (h *UserHandler) Handle(rout chi.Router) {
 	rout.Route("/{id}", func(router chi.Router) {
-		router.Get("/", h.getUserByID)
+		//Url : users/get/id
+		router.Get("/id", h.getUserByID)
 	})
 	rout.Get("/get", h.getUser)
 	rout.Post("/post", h.createUser)
@@ -37,10 +39,10 @@ func (h *UserHandler) getUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Cotent-Type", "application/json")
 	w.WriteHeader(200)
 	w.Write([]byte(`{"message" : "data fetch"}`))
-	fmt.Fprintf(w, "asfasdfa")
 }
 
 func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
+	//fmt.Println("getuserbyid 1")
 	id := param.UInt(r, "id")
 	userService := services.NewUserService()
 	d, e := userService.GetUserByID(id)
@@ -52,12 +54,17 @@ func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(200)
-	resp := response{Name: d}
-	byteArray, err := json.Marshal(resp)
-	if err == nil {
-		w.Write([]byte(byteArray))
-	}
-	fmt.Println(d)
+	w.Write([]byte("Name : " + d.NAME))
+	//	resp := response{Name: d}
+	//	byteArray, err := json.Marshal(resp)
+	/*	if err == nil {
+			w.Write([]byte(byteArray))
+		}
+	*/
+
+	fmt.Println(d.NAME)
+	fmt.Println(d.ID)
+
 }
 
 func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
@@ -67,12 +74,12 @@ func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) updateUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Cotent-Type", "application/json")
 	w.WriteHeader(200)
 	w.Write([]byte(`{"message" : "data updated"}`))
 }
 
 func (h *UserHandler) deleteUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Cotent-Type", "application/json")
 	w.WriteHeader(204)
 }
