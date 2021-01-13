@@ -16,9 +16,9 @@ var dbConfig *DBConfig
 func mapDbConfig() {
 	dbConfig = &DBConfig{
 		Server:   "localhost",
-		Port:     3000,
-		User:     "",
-		Password: "",
+		Port:     1433,
+		User:     "sa",
+		Password: "naim123456:)",
 		DbName:   "BasicGoLang",
 	}
 }

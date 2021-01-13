@@ -17,8 +17,8 @@ func main() {
 	rout.Route("/users", userHandler.Handle)
 	fmt.Println("Serving on port ", port)
 
-	http.ListenAndServe(port, rout)
 	config2 := config.NewDBConfig()
 	connection := conn.ConnectDB(config2)
 	defer connection.Close()
+	http.ListenAndServe(port, rout)
 }
