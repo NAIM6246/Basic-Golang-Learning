@@ -25,6 +25,7 @@ func NewUserHandler() *UserHandler {
 }
 
 func (h *UserHandler) Handle(rout chi.Router) {
+	
 	rout.Route("/{id}", func(router chi.Router) {
 		//Url : users/get/id
 		router.Get("/id", h.getUserByID)
