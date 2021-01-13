@@ -18,7 +18,7 @@ func mapDbConfig() {
 		Server:   "localhost",
 		Port:     1433,
 		User:     "sa",
-		Password: "naim123456:)",
+		Password: "golangdb123456.",
 		DbName:   "BasicGoLang",
 	}
 }
