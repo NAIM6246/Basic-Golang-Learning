@@ -19,6 +19,7 @@ func main() {
 
 	config2 := config.NewDBConfig()
 	connection := conn.ConnectDB(config2)
+	connection.Migration()
 	defer connection.Close()
 	http.ListenAndServe(port, rout)
 }

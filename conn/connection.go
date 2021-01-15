@@ -32,6 +32,8 @@ func ConnectDB(config *config.DBConfig) *DB {
 	connDBOnce.Do(func() {
 		_ = connectDB(config)
 	})
+
+	//dbInstance.Migration()
 	return dbInstance
 }
 
@@ -48,5 +50,5 @@ func connectDB(config *config.DBConfig) error {
 }
 
 func (db *DB) Migration() {
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Article{})
 }
