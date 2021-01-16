@@ -2,7 +2,9 @@ package handler
 
 import (
 	"Golang/handler/param"
+	"Golang/models"
 	"Golang/services"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -11,27 +13,24 @@ import (
 
 //Handler struct :
 type UserHandler struct {
+	userService services.UserService
 }
-
-/*
-type response struct {
-	Name string `json:"name"`
-}
-*/
 
 //NewUserHandler is the constructor of UserHandler struct
 func NewUserHandler() *UserHandler {
-	return &UserHandler{}
+	return &UserHandler{
+		userService: services.UserService{},
+	}
 }
 
 func (h *UserHandler) Handle(rout chi.Router) {
-	
+
 	rout.Route("/{id}", func(router chi.Router) {
 		//Url : users/get/id
 		router.Get("/id", h.getUserByID)
 	})
 	rout.Get("/get", h.getUser)
-	rout.Post("/post", h.createUser)
+	rout.Post("/", h.createUser)
 	rout.Put("/update", h.updateUser)
 	rout.Delete("/delete", h.deleteUser)
 }
@@ -69,9 +68,22 @@ func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(201)
-	w.Write([]byte(`{"essage" : "data created"}`))
+	fmt.Println("hi")
+	user := models.User{
+		ID:       456,
+		NAME:     "naim",
+		Articles: []models.Article{},
+	}
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		panic(err)
+	}
+	d, e := h.userService.CreateUser(&user)
+	if e != nil {
+		panic(e)
+		return
+	}
+	fmt.Println(w, d)
 }
 
 func (h *UserHandler) updateUser(w http.ResponseWriter, r *http.Request) {

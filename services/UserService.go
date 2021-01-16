@@ -1,21 +1,30 @@
 package services
 
-import "Golang/models"
+import (
+	"Golang/models"
+	"Golang/repository"
+)
 
-//struct :
+//UserService structure
 type UserService struct {
+	repository.UserRepository
 }
 
+//NewUserService Constructor of UserService
 func NewUserService() *UserService {
 	return &UserService{}
 }
 
-//Geting user id :
-func (h *UserService) GetUserByID(a uint) (*models.User, error) {
+//Geting user thorugh id
+func (h *UserService) GetUserByID(id uint) (*models.User, error) {
 
 	user := models.User{
-		ID:   a,
+		ID:   id,
 		NAME: "naim",
 	}
 	return &user, nil
+}
+
+func (h *UserService) CreateUser(user *models.User) (*models.User, error) {
+	return h.UserRepository.Create(user)
 }
