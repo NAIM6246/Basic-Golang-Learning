@@ -15,7 +15,7 @@ type UserRepository struct {
 //
 func NewUserRepository(db *conn.DB) *UserRepository {
 	return &UserRepository{
-		db: db.Table("Users"),
+		db: db.Table(models.UserTable()),
 	}
 }
 

@@ -8,6 +8,6 @@ type User struct {
 }
 
 //TableName for User
-func (User) TableName() string {
+func UserTable() string {
 	return "Users"
 }
