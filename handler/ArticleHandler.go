@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"Golang/models"
 	"Golang/services"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -30,4 +32,15 @@ func (h *ArticleHandler) getArticle(w http.ResponseWriter, req *http.Request) {
 
 func (h *ArticleHandler) createArticle(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("article created")
+	article := models.Article{}
+	err := json.NewDecoder(req.Body).Decode(&article)
+	if err != nil {
+		panic(err)
+	}
+	d, e := h.articleService.Create(&article)
+	if e != nil {
+		panic(e)
+		return
+	}
+	fmt.Println(w, d)
 }

@@ -69,11 +69,7 @@ func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
 
 func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("hi")
-	user := models.User{
-		ID:       456,
-		NAME:     "naim",
-		Articles: []models.Article{},
-	}
+	user := models.User{}
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		panic(err)
