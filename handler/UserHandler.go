@@ -30,7 +30,7 @@ func (h *UserHandler) Handle(rout chi.Router) {
 		router.Get("/id", h.getUserByID)
 	})
 	rout.Get("/get", h.getUser)
-	rout.Post("/", h.createUser)
+	rout.Post("/post", h.createUser)
 	rout.Put("/update", h.updateUser)
 	rout.Delete("/delete", h.deleteUser)
 }

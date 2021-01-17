@@ -18,10 +18,7 @@ func NewUserService() *UserService {
 //Geting user thorugh id
 func (h *UserService) GetUserByID(id uint) (*models.User, error) {
 
-	user := models.User{
-		ID:   id,
-		NAME: "naim",
-	}
+	var user models.User
 	return &user, nil
 }
 

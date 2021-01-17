@@ -10,6 +10,6 @@ type Article struct {
 }
 
 //TableName for Article
-func (Article) TableName() string {
+func ArticleTable() string {
 	return "Articles"
 }
