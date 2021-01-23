@@ -29,10 +29,10 @@ func (h *UserHandler) Handle(rout chi.Router) {
 		//Url : users/get/id
 		router.Get("/id", h.getUserByID)
 	})
-	rout.Get("/get", h.getUser)
-	rout.Post("/post", h.createUser)
-	rout.Put("/update", h.updateUser)
-	rout.Delete("/delete", h.deleteUser)
+	rout.Get("/", h.getUser)
+	rout.Post("/", h.createUser)
+	rout.Put("/", h.updateUser)
+	rout.Delete("/", h.deleteUser)
 }
 
 func (h *UserHandler) getUser(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +68,6 @@ func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("hi")
 	user := models.User{}
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
@@ -77,9 +76,10 @@ func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
 	d, e := h.userService.CreateUser(&user)
 	if e != nil {
 		panic(e)
-		return
+	} else {
+		fmt.Println(d)
 	}
-	fmt.Println(w, d)
+	fmt.Fprintf(w, "User create")
 }
 
 func (h *UserHandler) updateUser(w http.ResponseWriter, r *http.Request) {

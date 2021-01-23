@@ -22,25 +22,30 @@ func NewArticleHandler() *ArticleHandler {
 }
 
 func (h *ArticleHandler) Handler(rout chi.Router) {
-	rout.Get("/get", h.getArticle)
-	rout.Post("/post", h.createArticle)
+	rout.Get("/", h.getArticle)
+	rout.Post("/", h.createArticle)
 }
 
 func (h *ArticleHandler) getArticle(w http.ResponseWriter, req *http.Request) {
-	fmt.Println("message posted")
+	fmt.Fprintf(w, "message posted")
 }
 
 func (h *ArticleHandler) createArticle(w http.ResponseWriter, req *http.Request) {
-	fmt.Println("article created")
+	fmt.Fprintf(w, "article created")
 	article := models.Article{}
 	err := json.NewDecoder(req.Body).Decode(&article)
 	if err != nil {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(200)
+		w.Write([]byte("Name : "))
 		panic(err)
 	}
 	d, e := h.articleService.Create(&article)
 	if e != nil {
 		panic(e)
-		return
 	}
-	fmt.Println(w, d)
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(200)
+	w.Write([]byte("Name : " + d.Author.NAME))
+	fmt.Fprintf(w, d.Author.NAME)
 }

@@ -15,6 +15,8 @@ func main() {
 	rout := chi.NewRouter()
 	userHandler := handler.NewUserHandler()
 	rout.Route("/users", userHandler.Handle)
+	articleHandler := handler.NewArticleHandler()
+	rout.Route("/articles", articleHandler.Handler)
 	fmt.Println("Serving on port ", port)
 
 	config2 := config.NewDBConfig()
