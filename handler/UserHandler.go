@@ -71,15 +71,22 @@ func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
 	user := models.User{}
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		panic(err)
+		w.WriteHeader(400)
+		w.Header().Add("content-type", "application/json")
+		w.Write([]byte(`{"message" : "bad request error"}`))
+		return
 	}
 	d, e := h.userService.CreateUser(&user)
 	if e != nil {
-		panic(e)
-	} else {
-		fmt.Println(d)
+		w.WriteHeader(400)
+		w.Header().Add("content-type", "application/json")
+		w.Write([]byte(`{"message" : "bad request error"}`))
+		return
 	}
-	fmt.Fprintf(w, "User create")
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Add("content-type", "application/json")
+	_ = json.NewEncoder(w).Encode(d)
+
 }
 
 func (h *UserHandler) updateUser(w http.ResponseWriter, r *http.Request) {

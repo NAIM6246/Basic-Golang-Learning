@@ -31,21 +31,24 @@ func (h *ArticleHandler) getArticle(w http.ResponseWriter, req *http.Request) {
 }
 
 func (h *ArticleHandler) createArticle(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "article created")
 	article := models.Article{}
 	err := json.NewDecoder(req.Body).Decode(&article)
 	if err != nil {
+		//bad request error
+		w.WriteHeader(400)
 		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(200)
-		w.Write([]byte("Name : "))
-		panic(err)
+		w.Write([]byte(`{"message" : "bad request error"}`))
+		return
 	}
 	d, e := h.articleService.Create(&article)
 	if e != nil {
-		panic(e)
+		//bad request error
+		w.WriteHeader(400)
+		w.Header().Add("Content-Type", "application/json")
+		w.Write([]byte(`{"message" : "bad request error2"}`))
+		return
 	}
 	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write([]byte("Name : " + d.Author.NAME))
-	fmt.Fprintf(w, d.Author.NAME)
+	w.WriteHeader(http.StatusCreated)
+	_ = json.NewEncoder(w).Encode(d)
 }
