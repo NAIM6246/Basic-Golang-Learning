@@ -27,8 +27,10 @@ func NewDB() *DB {
 
 var dbInstance *DB
 
+var connDBOnce sync.Once
+
 func ConnectDB(config *config.DBConfig) *DB {
-	var connDBOnce sync.Once
+	//var connDBOnce sync.Once
 	connDBOnce.Do(func() {
 		_ = connectDB(config)
 	})

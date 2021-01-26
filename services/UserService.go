@@ -1,18 +1,23 @@
 package services
 
 import (
+	"Golang/config"
+	"Golang/conn"
 	"Golang/models"
 	"Golang/repository"
 )
 
 //UserService structure
 type UserService struct {
-	repository.UserRepository
+	userRepository *repository.UserRepository
 }
 
 //NewUserService Constructor of UserService
 func NewUserService() *UserService {
-	return &UserService{}
+	con := conn.ConnectDB(config.NewDBConfig())
+	return &UserService{
+		userRepository: repository.NewUserRepository(con),
+	}
 }
 
 //Geting user thorugh id
@@ -23,5 +28,5 @@ func (h *UserService) GetUserByID(id uint) (*models.User, error) {
 }
 
 func (h *UserService) CreateUser(user *models.User) (*models.User, error) {
-	return h.UserRepository.Create(user)
+	return h.userRepository.Create(user)
 }

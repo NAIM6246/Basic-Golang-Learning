@@ -10,21 +10,21 @@ import (
 //Int 	:
 func Int(r *http.Request, p string) int {
 	idString := chi.URLParam(r, p)
-
 	/*
-		checking the id
+		//	checking the id
 		fmt.Println(p, 2)
+		fmt.Println(idString)
 	*/
-
-	if idString != "" {
+	if len(idString) == 0 {
+		//	fmt.Println("Entered")
 		id, err := strconv.Atoi(idString)
 		/*
 			//cheching id should be commented
 			fmt.Println(id, 3)
 		*/
-
 		if err != nil {
 			//fmt.Println(err, 4)
+
 			return 0
 		}
 		return id

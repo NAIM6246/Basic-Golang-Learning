@@ -13,21 +13,28 @@ type ArticleRepository struct {
 }
 
 //Articlerepository	:
-func NewArticleRepository(db *conn.DB) *UserRepository {
-	return &UserRepository{
+func NewArticleRepository(db *conn.DB) *ArticleRepository {
+	return &ArticleRepository{
 		db: db.Table(models.ArticleTable()),
 	}
 }
 
 //Create article	:
 func (repo *ArticleRepository) Create(art *models.Article) (*models.Article, error) {
-	var err error
-	if !repo.db.NewRecord(art) {
-		repo.db.Create(&art)
-		if !repo.db.NewRecord(&art) {
-			return art, nil
-		}
+	/*
+			var err error
+			if !repo.db.NewRecord(art) {
+				repo.db.Create(&art)
+				if !repo.db.NewRecord(&art) {
+					return art, nil
+				}
+				return nil, err
+			}
+
+		fmt.Println(art)
+	*/
+	if err := repo.db.Create(&art).Error; err != nil {
 		return nil, err
 	}
-	return nil, err
+	return art, nil
 }

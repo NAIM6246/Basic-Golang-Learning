@@ -1,17 +1,22 @@
 package services
 
 import (
+	"Golang/config"
+	"Golang/conn"
 	"Golang/models"
 	"Golang/repository"
 )
 
 //Atricle	:
 type ArticleService struct {
-	repository.ArticleRepository
+	articleRepository *repository.ArticleRepository
 }
 
-func NewArticleRepository() *ArticleService {
-	return &ArticleService{}
+func NewArticleService() *ArticleService {
+	con := conn.ConnectDB(config.NewDBConfig())
+	return &ArticleService{
+		articleRepository: repository.NewArticleRepository(con),
+	}
 }
 
 //Get Article by id
@@ -22,5 +27,5 @@ func (h *ArticleService) GetArticleByID(id uint) (*models.Article, error) {
 
 //Create Article
 func (h *ArticleService) CreateArticle(article *models.Article) (*models.Article, error) {
-	return h.ArticleRepository.Create(article)
+	return h.articleRepository.Create(article)
 }

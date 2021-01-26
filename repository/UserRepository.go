@@ -21,13 +21,24 @@ func NewUserRepository(db *conn.DB) *UserRepository {
 
 //Create :
 func (repo *UserRepository) Create(u *models.User) (*models.User, error) {
+	/*fmt.Println("print 0")
 	var err error
-	if !repo.db.NewRecord(u) {
+	if !repo.db.NewRecord(&u) {
 		repo.db.Create(&u)
-		if !repo.db.NewRecord(u) {
+		if !repo.db.NewRecord(&u) {
+			fmt.Println("print 1")
 			return u, nil
 		}
+		fmt.Println("print 2")
 		return nil, err
 	}
+	fmt.Println("print 3")
 	return nil, err
+
+	fmt.Println(u)
+	*/
+	if err := repo.db.Create(&u).Error; err != nil {
+		return nil, err
+	}
+	return u, nil
 }

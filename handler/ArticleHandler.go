@@ -12,12 +12,12 @@ import (
 
 //Article handler	:
 type ArticleHandler struct {
-	articleService services.ArticleService
+	articleService *services.ArticleService
 }
 
 func NewArticleHandler() *ArticleHandler {
 	return &ArticleHandler{
-		articleService: services.ArticleService{},
+		articleService: services.NewArticleService(),
 	}
 }
 
@@ -27,6 +27,7 @@ func (h *ArticleHandler) Handler(rout chi.Router) {
 }
 
 func (h *ArticleHandler) getArticle(w http.ResponseWriter, req *http.Request) {
+	//this function is not completed yet
 	fmt.Fprintf(w, "message posted")
 }
 
@@ -40,15 +41,16 @@ func (h *ArticleHandler) createArticle(w http.ResponseWriter, req *http.Request)
 		w.Write([]byte(`{"message" : "bad request error"}`))
 		return
 	}
-	d, e := h.articleService.Create(&article)
+	fmt.Println(article)
+	d, e := h.articleService.CreateArticle(&article)
 	if e != nil {
 		//bad request error
 		w.WriteHeader(400)
 		w.Header().Add("Content-Type", "application/json")
-		w.Write([]byte(`{"message" : "bad request error2"}`))
+		w.Write([]byte(`{"message" : "bad request error"}`))
 		return
 	}
 	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(201)
 	_ = json.NewEncoder(w).Encode(d)
 }

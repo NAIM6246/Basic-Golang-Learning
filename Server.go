@@ -14,7 +14,9 @@ func main() {
 	port := ":3000"
 	rout := chi.NewRouter()
 	userHandler := handler.NewUserHandler()
+	//fmt.Println("HERE")
 	rout.Route("/users", userHandler.Handle)
+	//fmt.Println("here2")
 	articleHandler := handler.NewArticleHandler()
 	rout.Route("/articles", articleHandler.Handler)
 	fmt.Println("Serving on port ", port)
