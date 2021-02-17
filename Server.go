@@ -20,7 +20,9 @@ func main() {
 	articleHandler := handler.NewArticleHandler()
 	rout.Route("/articles", articleHandler.Handler)
 	fmt.Println("Serving on port ", port)
-
+	//upload file handler
+	//http.HandleFunc("/upload", handler.UploadHandler)
+	rout.Route("/upload", handler.NewUploadsHandler().UploadHandler)
 	config2 := config.NewDBConfig()
 	connection := conn.ConnectDB(config2)
 	connection.Migration()

@@ -42,3 +42,12 @@ func (repo *UserRepository) Create(u *models.User) (*models.User, error) {
 	}
 	return u, nil
 }
+
+func (repo *UserRepository) GetAll() ([]*models.User, error) {
+	var users []*models.User
+	err := repo.db.Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}

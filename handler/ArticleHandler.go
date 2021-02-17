@@ -28,7 +28,18 @@ func (h *ArticleHandler) Handler(rout chi.Router) {
 
 func (h *ArticleHandler) getArticle(w http.ResponseWriter, req *http.Request) {
 	//this function is not completed yet
-	fmt.Fprintf(w, "message posted")
+	d, e := h.articleService.GetArticle()
+	if e != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"message" : "requested data is not found"}`))
+		return
+	}
+	fmt.Println("data displayed")
+	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(d)
+
 }
 
 func (h *ArticleHandler) createArticle(w http.ResponseWriter, req *http.Request) {
@@ -36,11 +47,13 @@ func (h *ArticleHandler) createArticle(w http.ResponseWriter, req *http.Request)
 	err := json.NewDecoder(req.Body).Decode(&article)
 	if err != nil {
 		//bad request error
+		fmt.Println(err)
 		w.WriteHeader(400)
 		w.Header().Add("Content-Type", "application/json")
 		w.Write([]byte(`{"message" : "bad request error"}`))
 		return
 	}
+	fmt.Println("hi")
 	fmt.Println(article)
 	d, e := h.articleService.CreateArticle(&article)
 	if e != nil {
@@ -50,6 +63,7 @@ func (h *ArticleHandler) createArticle(w http.ResponseWriter, req *http.Request)
 		w.Write([]byte(`{"message" : "bad request error"}`))
 		return
 	}
+
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(201)
 	_ = json.NewEncoder(w).Encode(d)

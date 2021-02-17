@@ -3,6 +3,7 @@ package repository
 import (
 	"Golang/conn"
 	"Golang/models"
+	"fmt"
 
 	"github.com/jinzhu/gorm"
 )
@@ -21,19 +22,17 @@ func NewArticleRepository(db *conn.DB) *ArticleRepository {
 
 //Create article	:
 func (repo *ArticleRepository) Create(art *models.Article) (*models.Article, error) {
-	/*
-			var err error
-			if !repo.db.NewRecord(art) {
-				repo.db.Create(&art)
-				if !repo.db.NewRecord(&art) {
-					return art, nil
-				}
-				return nil, err
-			}
-
-		fmt.Println(art)
-	*/
 	if err := repo.db.Create(&art).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return art, nil
+}
+
+func (repo *ArticleRepository) Get() ([]*models.Article, error) {
+	var art []*models.Article
+	err := repo.db.Find(&art).Error
+	if err != nil {
 		return nil, err
 	}
 	return art, nil

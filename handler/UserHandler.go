@@ -36,9 +36,16 @@ func (h *UserHandler) Handle(rout chi.Router) {
 }
 
 func (h *UserHandler) getUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Cotent-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write([]byte(`{"message" : "data fetch"}`))
+	d, e := h.userService.GetAll()
+	if e != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"message" : "requested data is not found"}`))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(d)
 }
 
 func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
@@ -59,12 +66,12 @@ func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Name : " + d.NAME))
 	//	resp := response{Name: d}
 	//	byteArray, err := json.Marshal(resp)
-	/*	
-	if err == nil {
-			w.Write([]byte(byteArray))
-		}
-	fmt.Println(d.NAME)
-	fmt.Println(d.ID)
+	/*
+		if err == nil {
+				w.Write([]byte(byteArray))
+			}
+		fmt.Println(d.NAME)
+		fmt.Println(d.ID)
 	*/
 }
 

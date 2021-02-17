@@ -29,3 +29,8 @@ func (h *ArticleService) GetArticleByID(id uint) (*models.Article, error) {
 func (h *ArticleService) CreateArticle(article *models.Article) (*models.Article, error) {
 	return h.articleRepository.Create(article)
 }
+
+//Get Article by id
+func (h *ArticleService) GetArticle() ([]*models.Article, error) {
+	return h.articleRepository.Get()
+}

@@ -30,3 +30,8 @@ func (h *UserService) GetUserByID(id uint) (*models.User, error) {
 func (h *UserService) CreateUser(user *models.User) (*models.User, error) {
 	return h.userRepository.Create(user)
 }
+
+//Get all user :
+func (h *UserService) GetAll() ([]*models.User, error) {
+	return h.userRepository.GetAll()
+}
