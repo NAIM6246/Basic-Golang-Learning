@@ -11,15 +11,20 @@ import (
 	"github.com/go-chi/chi"
 )
 
+//
+type IUserHandler interface {
+	IHandler
+}
+
 //Handler struct :
 type UserHandler struct {
-	userService *services.UserService
+	userService services.IUserService
 }
 
 //NewUserHandler is the constructor of UserHandler struct
-func NewUserHandler() *UserHandler {
+func NewUserHandler(userService services.IUserService) IUserHandler {
 	return &UserHandler{
-		userService: services.NewUserService(),
+		userService: userService,
 	}
 }
 
@@ -52,8 +57,8 @@ func (h *UserHandler) getUserByID(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("getuserbyid 1")
 	id := param.UInt(r, "id")
 	//fmt.Println(id)
-	userService := services.NewUserService()
-	d, e := userService.GetUserByID(id)
+	//userService := services.NewUserService()
+	d, e := h.userService.GetUserByID(id)
 	if e != nil {
 		w.Header().Add("Content-type", "application/json")
 		w.WriteHeader(200)

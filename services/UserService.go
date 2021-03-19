@@ -1,22 +1,27 @@
 package services
 
 import (
-	"Golang/config"
-	"Golang/conn"
 	"Golang/models"
 	"Golang/repository"
 )
 
+//
+type IUserService interface {
+	GetAll() ([]*models.User, error)
+	CreateUser(user *models.User) (*models.User, error)
+	GetUserByID(id uint) (*models.User, error)
+}
+
 //UserService structure
 type UserService struct {
-	userRepository *repository.UserRepository
+	userRepository repository.IUserRepository
 }
 
 //NewUserService Constructor of UserService
-func NewUserService() *UserService {
-	con := conn.ConnectDB(config.NewDBConfig())
+func NewUserService(userRepository repository.IUserRepository) IUserService {
+	//con := conn.ConnectDB(config.NewDBConfig())
 	return &UserService{
-		userRepository: repository.NewUserRepository(con),
+		userRepository: userRepository,
 	}
 }
 

@@ -10,18 +10,23 @@ import (
 	"github.com/go-chi/chi"
 )
 
-//Article handler	:
-type ArticleHandler struct {
-	articleService *services.ArticleService
+//
+type IArticleHandler interface {
+	IHandler
 }
 
-func NewArticleHandler() *ArticleHandler {
+//Article handler	:
+type ArticleHandler struct {
+	articleService services.IArticleService
+}
+
+func NewArticleHandler(articleService services.IArticleService) IArticleHandler {
 	return &ArticleHandler{
-		articleService: services.NewArticleService(),
+		articleService: articleService,
 	}
 }
 
-func (h *ArticleHandler) Handler(rout chi.Router) {
+func (h *ArticleHandler) Handle(rout chi.Router) {
 	rout.Get("/", h.getArticle)
 	rout.Post("/", h.createArticle)
 }

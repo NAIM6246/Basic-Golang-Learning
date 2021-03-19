@@ -30,7 +30,7 @@ func (h *UploadsHandler) uploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer file.Close()
-	fmt.Println(handler.Filename)
+	fmt.Println(handler.Header)
 
 	//creating file
 	dst, err := os.Create("./image/" + handler.Filename)

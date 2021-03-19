@@ -4,19 +4,25 @@ import (
 	"Golang/conn"
 	"Golang/models"
 	"fmt"
-
-	"github.com/jinzhu/gorm"
 )
+
+//
+type IArticleRepository interface {
+	Create(art *models.Article) (*models.Article, error)
+	Get() ([]*models.Article, error)
+}
 
 //Article	:
 type ArticleRepository struct {
-	db *gorm.DB
+	*BaseRepository
 }
 
 //Articlerepository	:
-func NewArticleRepository(db *conn.DB) *ArticleRepository {
+func NewArticleRepository(db *conn.DB) IArticleRepository {
 	return &ArticleRepository{
-		db: db.Table(models.ArticleTable()),
+		&BaseRepository{
+			db: db.Table(models.ArticleTable()),
+		},
 	}
 }
 

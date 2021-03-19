@@ -1,21 +1,25 @@
 package services
 
 import (
-	"Golang/config"
-	"Golang/conn"
 	"Golang/models"
 	"Golang/repository"
 )
 
-//Atricle	:
-type ArticleService struct {
-	articleRepository *repository.ArticleRepository
+//
+type IArticleService interface {
+	CreateArticle(article *models.Article) (*models.Article, error)
+	GetArticle() ([]*models.Article, error)
 }
 
-func NewArticleService() *ArticleService {
-	con := conn.ConnectDB(config.NewDBConfig())
+//Atricle	:
+type ArticleService struct {
+	articleRepository repository.IArticleRepository
+}
+
+func NewArticleService(articleRepository repository.IArticleRepository) IArticleService {
+	//con := conn.ConnectDB(config.NewDBConfig())
 	return &ArticleService{
-		articleRepository: repository.NewArticleRepository(con),
+		articleRepository: articleRepository,
 	}
 }
 

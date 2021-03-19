@@ -3,19 +3,26 @@ package repository
 import (
 	"Golang/conn"
 	"Golang/models"
-
-	"github.com/jinzhu/gorm"
 )
 
 //
-type UserRepository struct {
-	db *gorm.DB
+type IUserRepository interface {
+	Create(u *models.User) (*models.User, error)
+	GetAll() ([]*models.User, error)
 }
 
 //
-func NewUserRepository(db *conn.DB) *UserRepository {
+type UserRepository struct {
+	//db *gorm.DB
+	*BaseRepository
+}
+
+//
+func NewUserRepository(db *conn.DB) IUserRepository {
 	return &UserRepository{
-		db: db.Table(models.UserTable()),
+		&BaseRepository{
+			db: db.Table(models.UserTable()),
+		},
 	}
 }
 
