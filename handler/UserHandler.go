@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"Golang/auth"
 	"Golang/handler/param"
 	"Golang/models"
 	"Golang/services"
@@ -19,12 +20,15 @@ type IUserHandler interface {
 //Handler struct :
 type UserHandler struct {
 	userService services.IUserService
+	auth        auth.IAuth
 }
 
 //NewUserHandler is the constructor of UserHandler struct
-func NewUserHandler(userService services.IUserService) IUserHandler {
+func NewUserHandler(userService services.IUserService,
+	auth auth.IAuth) IUserHandler {
 	return &UserHandler{
 		userService: userService,
+		auth:        auth,
 	}
 }
 
@@ -35,7 +39,7 @@ func (h *UserHandler) Handle(rout chi.Router) {
 		router.Get("/id", h.getUserByID)
 	})
 	rout.Get("/", h.getUser)
-	rout.Post("/", h.createUser)
+	rout.With(h.auth.Authentication).With(auth.Admin).Post("/", h.createUser)
 	rout.Put("/", h.updateUser)
 	rout.Delete("/", h.deleteUser)
 }

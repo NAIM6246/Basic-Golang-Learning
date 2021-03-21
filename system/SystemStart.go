@@ -1,6 +1,7 @@
 package system
 
 import (
+	"Golang/auth"
 	"Golang/config"
 	"Golang/conn"
 	"Golang/handler"
@@ -9,6 +10,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/rs/cors"
 	"go.uber.org/dig"
 )
 
@@ -25,10 +28,14 @@ func buildContainer() *dig.Container {
 	//Article
 	container.Provide(repository.NewArticleRepository)
 	container.Provide(services.NewArticleService)
+	//Authentication
+	container.Provide(services.NewAuthService)
+	container.Provide(auth.NewAuth)
 
 	//Handlers
 	container.Provide(handler.NewUserHandler)
 	container.Provide(handler.NewArticleHandler)
+	container.Provide(handler.NewAuthhandler)
 
 	//server
 	container.Provide(NewServer)
@@ -55,19 +62,23 @@ func NewSystem() {
 type Server struct {
 	userHandler    handler.IUserHandler
 	articleHandler handler.IArticleHandler
-	router         *chi.Mux
-	dbContext      *conn.DB
+	authHandler    handler.IAuthHandler
+
+	router    *chi.Mux
+	dbContext *conn.DB
 }
 
 //Constructor of server	:
 func NewServer(
 	userHandler handler.IUserHandler,
 	articleHandler handler.IArticleHandler,
+	authHandler handler.IAuthHandler,
 	dbContext *conn.DB) *Server {
 
 	return &Server{
 		userHandler:    userHandler,
 		articleHandler: articleHandler,
+		authHandler:    authHandler,
 		router:         chi.NewRouter(),
 		dbContext:      dbContext,
 	}
@@ -83,10 +94,14 @@ func (s *Server) run() {
 }
 
 func (s *Server) setMiddlewares() {
+	s.router.Use(middleware.Logger)
+	//s.router.Use(middleware.Timeout(0 * time.Millisecond))
 	s.dbContext.Migration()
+	s.router.Use(cors.AllowAll().Handler)
 }
 
 func (s *Server) mapHandlers() {
+	s.router.Route("/auth", s.authHandler.Handle)
 	s.router.Route("/articles", s.articleHandler.Handle)
 	s.router.Route("/users", s.userHandler.Handle)
 }

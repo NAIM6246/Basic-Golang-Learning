@@ -9,6 +9,7 @@ type DBConfig struct {
 	User     string
 	Password string
 	DbName   string
+	Secret   string
 }
 
 var dbConfig *DBConfig
@@ -20,6 +21,7 @@ func mapDbConfig() {
 		User:     "sa",
 		Password: "golangdb123456.",
 		DbName:   "BasicGoLang",
+		Secret:   NewAppConfig(),
 	}
 }
 

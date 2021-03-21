@@ -2,6 +2,10 @@ package main
 
 import "Golang/system"
 
+/*
+	TO DO:
+	subscription
+*/
 func main() {
 	/*
 		port := ":3000"

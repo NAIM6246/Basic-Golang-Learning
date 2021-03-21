@@ -9,6 +9,7 @@ import (
 type IUserRepository interface {
 	Create(u *models.User) (*models.User, error)
 	GetAll() ([]*models.User, error)
+	Get(u *models.UserLoginDto) (*models.User, error)
 }
 
 //
@@ -57,4 +58,13 @@ func (repo *UserRepository) GetAll() ([]*models.User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func (repo *UserRepository) Get(u *models.UserLoginDto) (*models.User, error) {
+	var user models.User
+	err := repo.db.Where("email=?", u.Email).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
