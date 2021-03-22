@@ -38,8 +38,9 @@ func (h *UserHandler) Handle(rout chi.Router) {
 		//Url : users//id
 		router.Get("/id", h.getUserByID)
 	})
-	rout.Get("/", h.getUser)
-	rout.With(h.auth.Authentication).With(auth.Admin).Post("/", h.createUser)
+	rout.With(h.auth.Authentication).Get("/", h.getUser)
+	//fmt.Println("user")
+	rout.Post("/", h.createUser)
 	rout.Put("/", h.updateUser)
 	rout.Delete("/", h.deleteUser)
 }

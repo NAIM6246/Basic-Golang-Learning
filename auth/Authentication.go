@@ -50,40 +50,34 @@ func (auth *Auth) GenerateToken(user *models.User) (string, error) {
 
 //Authentication
 func (auth *Auth) Authentication(handler http.Handler) http.Handler {
-	//fmt.Println("Entered")
+	fmt.Println("Entered in Aithentication")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("content-type", "application/json")
 		extractToken := func() string {
 			bearToken := r.Header.Get("Authorization")
-			fmt.Println(bearToken)
+			//fmt.Println(bearToken)
 			strArr := strings.Split(bearToken, " ")
-			if len(strArr) == 4 {
-				fmt.Println("passed")
-				//fmt.Println(strArr[3])
-				return strArr[3]
+			if len(strArr) == 2 {
+				return strArr[1]
 			}
-			//fmt.Println(len(strArr[1]))
 			return ""
 		}
-		//fmt.Println(r.Header)
 		if r.Header["Authorization"] != nil {
 			tokenString := extractToken()
-			/*
-				passing nil toeknstring
-				Getnerating error
-			*/
 			//fmt.Println(tokenString)
 			token, err := jwt.Parse(tokenString, func(token2 *jwt.Token) (interface{}, error) {
-				fmt.Println("hi")
 				if _, ok := token2.Method.(*jwt.SigningMethodHMAC); !ok {
-
-					fmt.Println("error here")
 					return nil, errors.New("Invalid authoraization token")
 				}
 				return []byte(auth.Secret), nil
 			})
+			/*
+				fmt.Println("Error : ")
+				fmt.Println(err)
+				fmt.Println("Token : ")
+				fmt.Println(token)
+			*/
 			if err != nil {
-				fmt.Println("errefsdfafsdfadf")
 				w.WriteHeader(http.StatusUnauthorized)
 				json.NewEncoder(w).Encode(err)
 				return

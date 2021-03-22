@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"Golang/auth"
 	"Golang/models"
 	"Golang/services"
 	"encoding/json"
@@ -18,17 +19,21 @@ type IArticleHandler interface {
 //Article handler	:
 type ArticleHandler struct {
 	articleService services.IArticleService
+	auth           auth.IAuth
 }
 
-func NewArticleHandler(articleService services.IArticleService) IArticleHandler {
+func NewArticleHandler(articleService services.IArticleService,
+	auth auth.IAuth) IArticleHandler {
 	return &ArticleHandler{
 		articleService: articleService,
+		auth:           auth,
 	}
 }
 
 func (h *ArticleHandler) Handle(rout chi.Router) {
+	//fmt.Println("article")
 	rout.Get("/", h.getArticle)
-	rout.Post("/", h.createArticle)
+	rout.With(h.auth.Authentication).Post("/", h.createArticle)
 }
 
 func (h *ArticleHandler) getArticle(w http.ResponseWriter, req *http.Request) {
